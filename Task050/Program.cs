@@ -18,74 +18,90 @@
 5 -> 9
 */
 
-int[,] CreateArray(int row, int col, int min, int max)
+int[,] CreateRandomArray(int lengthRow, int lengthCol, int deviation)
 {
-    int[,] array = new int[row, col];
-    for (int i = 0; i < array.GetLength(0); i++)
+    int[,] array = new int[lengthRow, lengthCol];
+    for (int i = 0; i < lengthRow; i++)
     {
-        for (int j = 0; j < array.GetLength(1); j++)
+        for (int j = 0; j < lengthCol; j++)
         {
-            array[i, j] = new Random().Next(min, max);
+            array[i, j] = new Random().Next(-deviation, deviation + 1);
         }
     }
     return array;
 }
-
-int[] FindNumberPosition(int[,] arr, int number)
+void print2dArray(int[,] array)
 {
-    int[] position = new int[2];
-    for (int i = 0; i < arr.GetLength(0); i++)
-    {
-        for (int j = 0; j < arr.GetLength(1); j++)
-        {
-            if (arr[i, j] == number)
-            {
-                position[0] = i + 1;
-                position[1] = j + 1;
-                return position;
-            }
-        }
-    }
-    position[0] = -1;
-    position[1] = -1;
-    return position;
-}
-
-void PrintArray(int[,] array)
-{
-    System.Console.WriteLine("Массив:");
     for (int i = 0; i < array.GetLength(0); i++)
     {
         for (int j = 0; j < array.GetLength(1); j++)
         {
-            if (array[i, j] / 1000 > 0) System.Console.Write($"{array[i, j]}   ");
-            else if (array[i, j] / 100 > 0) System.Console.Write($" {array[i, j]}   ");
-            else if (array[i, j] / 10 > 0) System.Console.Write($"  {array[i, j]}   ");
-            else System.Console.Write($"   {array[i, j]}   ");
+            Console.Write(array[i, j] + "\t");
         }
-        System.Console.WriteLine();
+        Console.WriteLine();
     }
 }
 
-void PrintPosition(int[] pos, int num)
+int[] CreateArrayConversion(int[,] array)
 {
-    System.Console.WriteLine();
-    if (pos[0] > 0 && pos[1] > 0) System.Console.WriteLine($"Число {num} находится в {pos[0]}-й строке, {pos[1]}-м столбце");
-    else System.Console.WriteLine($"Число {num} отсутствует в заданном массиве");
-    System.Console.WriteLine();
+
+    int sizeNewArray = array.GetLength(0) * array.GetLength(1);
+    int[] newArray = new int[sizeNewArray];
+    int index = 0;
+    for (int i = 0; i < array.GetLength(0); i++)
+    {
+        for (int j = 0; j < array.GetLength(1); j++)
+        {
+            newArray[index] = array[i, j];
+            index++;
+        }
+    }
+    return newArray;
+}
+void PrintArray(int[] array)
+{
+    Console.Write("[");
+    for (int i = 0; i < array.Length; i++)
+    {
+        Console.Write(array[i]);
+        if (i < array.Length - 1)
+        {
+            Console.Write(", ");
+        }
+    }
+    Console.WriteLine("]");
 }
 
-int GetNumerToFind()
+void UserElement(int[] array)
 {
-    System.Console.WriteLine();
-    System.Console.Write("Введите число:   ");
-    string writeNumber = Console.ReadLine();
-    int number = Convert.ToInt32(writeNumber);
-    return number;
-}
+    Console.Write("Введите позицию элемента: ");
+    int userElement = int.Parse(Console.ReadLine());
+    for (int i = 0; i <= array.Length; i++)
+    {
+        if (userElement == i)
+        {
+            Console.WriteLine($" Значение элемента под индексом {userElement} = {array[i]}");
+        }
+    }
 
-int[,] array1 = CreateArray(7, 10, 1, 1000);
-PrintArray(array1);
-int number = GetNumerToFind();
-int[] position = FindNumberPosition(array1, number);
-PrintPosition(position, number);
+    if (userElement > array.Length)
+    {
+        Console.WriteLine("Такого числа в массиве нет");
+        Console.WriteLine();
+    }
+    if (userElement < 0)
+    {
+        Console.WriteLine("Такого числа в массиве нет");
+        Console.WriteLine();
+    }
+
+}
+Console.WriteLine("Двумерный массив:");
+int[,] array1 = CreateRandomArray(4, 4, 100);
+print2dArray(array1);
+Console.WriteLine();
+Console.WriteLine("Преобразованный одномерный массив:");
+int[] array2 = CreateArrayConversion(array1);
+PrintArray(array2);
+Console.WriteLine();
+UserElement(array2);
